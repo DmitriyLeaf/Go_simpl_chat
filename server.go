@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"fmt"
@@ -21,8 +21,12 @@ func Client(client net.Conn, ){
 			break
 		}
 
+		fmt.Println(client.RemoteAddr(), ": ", string(rline))
+
 		for i := clients.Front(); i != nil; i = i.Next() {
-			fmt.Println(client.RemoteAddr(), ": ", string(rline))
+			fmt.Fprint(i.Value.(net.Conn), client.RemoteAddr())
+			fmt.Fprint(i.Value.(net.Conn), ": ")
+			fmt.Fprint(i.Value.(net.Conn), rline)
 		}
 	}
 }
@@ -49,7 +53,7 @@ func main() {
 		}
 
 		clients.PushBack(client)
-		fmt.Println("Connected: ", client.RemoteAddr(), )
+		fmt.Println("Connected: ", client.RemoteAddr())
 		
 		go Client(client)
 	}
